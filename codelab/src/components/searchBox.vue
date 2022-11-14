@@ -1,20 +1,23 @@
-<template v-slot="prepend">
+<template>
+  <div>
     <el-input placeholder="请输入内容"
             v-model="searchValue"
             class="inputbox"
-            @keyup.enter="goSearch"
+            @keyup.enter.native="goSearch"
             style="width: 750px; font-size: 17px"
           >
-            <el-prepend-select v-model="selectValue"  placeholder="主要语言" style="width: 130px" >
-              <el-prepend-option
+            <el-select v-model="selectValue" slot="prepend"  placeholder="主要语言" style="width: 130px" >
+              <el-option
                   v-for="item in options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
-              </el-prepend-option>
-            </el-prepend-select>
-            <el-button icon="el-icon-search" @click="goSearch"></el-button>
+              </el-option>
+            </el-select>
+            <el-button slot="append" icon="el-icon-search" @click="goSearch"></el-button>
           </el-input>
+  </div>
+    
 </template>
 <script>
 export default {

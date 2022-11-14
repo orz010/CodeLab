@@ -4,16 +4,16 @@
             <h1>CodeLab</h1>
         </div>
         <div class="searchbox">
-            <!-- <search-box :options="option"/> -->
+            <SearchBox :options="option"/>
         </div>
     </div>
 </template>
 <script>
-// import SearchBox from '../components/searchBox.vue'
+import SearchBox from '../components/searchBox.vue'
 export default {
-    name: 'homeindex',
+    name: 'HomeIndex',
     components: {
-        // SearchBox,
+        SearchBox,
     },
     data(){
         return{
