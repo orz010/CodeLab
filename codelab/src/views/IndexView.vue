@@ -1,7 +1,10 @@
 <template>
     <div class="homeindex">
+        <div class="background">
+            <!-- <img src="../assets/images/background_home.jpg" class="background" alt=""> -->
+        </div>
         <div class="title">
-            <h1>CodeLab</h1>
+            CodeLab
         </div>
         <div class="searchbox">
             <SearchBox :options="option"/>
@@ -46,3 +49,20 @@ export default {
     },
 }
 </script>
+<style>
+.homeindex .background {
+  position:absolute;
+  width:100%;
+  height:100%;
+  left:0;
+  z-index:-1;
+  object-fit: cover;
+}
+.homeindex .title{
+    margin-top: 250px;
+    font-size : 60px;
+}
+.homeindex .searchbox{
+    margin-top: 50px;
+}
+</style>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    123
     <el-input placeholder="请输入内容"
             v-model="searchValue"
             class="inputbox"
@@ -17,7 +16,6 @@
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="goSearch"></el-button>
           </el-input>
-          <el-input></el-input>
   </div>
     
 </template>
@@ -44,13 +42,13 @@ export default {
 }
 </script>
 <style scoped>
-.el-input.is-active .el-input__inner, .el-input__inner:focus {
+.inputbox >>> .el-input.is-active .el-input__inner, .el-input__inner:focus {
   border: 5px solid #48a1fa;
 }
-.el-input__inner {
+.inputbox >>> .el-input__inner {
   height: 50px;
 }
-.el-input-group__append {
+.inputbox >>> .el-input-group__append {
   background-color: #48a1fa;
   color: white;
   vertical-align: middle;
@@ -62,10 +60,10 @@ export default {
   width: 1px;
   white-space: nowrap;
 }
-.el-input-group__append:hover {
+.inputbox >>> .el-input-group__append:hover {
   background-color: #2d93f8;
 }
-.el-input-group__prepend {
+.inputbox >>> .el-input-group__prepend {
   border-radius: 25px 0 0 25px;
 }
 </style>
