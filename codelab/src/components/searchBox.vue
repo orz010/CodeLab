@@ -14,7 +14,7 @@
                   :value="item.value">
               </el-option>
             </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="goSearch"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="goSearch()"></el-button>
           </el-input>
   </div>
     
@@ -24,20 +24,34 @@ export default {
     name: "searchBox",
     props: {
       options: [],
-
     },
     data(){
         return{
-            searchValue: '',
-            selectValue: '',
+            searchValue: this.$store.getters.getSearchValue,
+            selectValue: this.$store.getters.getSelectValue,
         }
     },
-    goSearch(){
+    methods:{
+      goSearch(){
         if (this.searchValue === '') {
             this.$message.warning("请输入检索词！");
             return;
         }
+        this.$store.commit('setSearchValue',this.searchValue);
+        this.$store.commit('setSelectValue',this.selectValue);
+        // console.log(this.$store.getters.getSearchValue)
+        this.$router.push({
+          path: '/list',
+          query: { search: this.searchValue }
+        });
+      },
+      
     },
+    mutations:{
+      // getSearchValue(){
+      //   this.searchValue=this.$store.getters.getSearchValue;
+      // },
+    }
 
 }
 </script>

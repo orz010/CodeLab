@@ -1,12 +1,164 @@
 <template>
-    <div class="ProgramList">
-        <header class="headerMessage">
-            CodeLab
-        </header>
-    </div>
+  <div class="programs">
+      <div class="searchbox">
+            <SearchBox :options="option"/>
+        </div>
+      <el-row>
+          <el-col :span="6">
+              <div class="aside"></div>
+          </el-col>
+          <el-col :span="12" class="program-list">
+            <div class="programs-body" style="text-align: left">
+                <div v-for="(program, index) in this.programs" v-bind:key="index" class="program-item">
+                    <div style="margin-bottom: 10px">
+                        <span class="program-title" @click="gotoProgram(program.program_id)">{{program.program_title}}</span>
+                    </div>
+                    <!-- <div style="text-align:left;margin-top:10px;">
+                    <span class="abstract">{{program.abstract|ellipsis}}</span>
+                    </div> -->
+
+                    <div class="citation-count">
+                    <span>{{ program.star_num }}&nbsp;star</span>
+                    <span>&nbsp;·&nbsp;{{ program.fork_num }}&nbsp;fork</span>
+                    </div>
+
+                    <el-divider v-if="index<programs.length-1"></el-divider>
+                </div>
+            </div>
+          </el-col>
+          <el-col :span="6">
+              <div class="aside">  </div>
+          </el-col>
+      </el-row>
+    
+  </div>
 </template>
 
-<style>
+<script>
+import SearchBox from '../components/searchBox.vue'
+export default {
+    components: {
+        SearchBox,
+    },
+    data(){
+        return{
+            programs:[{'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
+            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4}],
+            option: [
+                {
+                value: '1',
+                label: 'C'
+                }, {
+                value: '2',
+                label: 'C++'
+                }, {
+                value: '3',
+                label: 'Java'
+                }, {
+                value: '4',
+                label: 'Python'
+                }, {
+                value: '5',
+                label: 'JavaScript'
+                }, {
+                value: '6',
+                label: 'Ada'
+                }, {
+                value: '7',
+                label: 'rust'
+                },
+            ],
+
+        }
+    },
+  methods: {
+    gotoProgram(program_id) {
+      this.$router.push({
+        path: '/program',
+        query: { v: program_id }
+      });
+    }
+  },
+//   filters: {
+//     ellipsis: function(value) {
+//       if (!value) return "";
+//       if (value.length > 300) {
+//         return value.slice(0,300) + "...";
+//       }
+//       return value;
+//     },
+//   }
+}
+</script>
+
+<style scoped>
+.searchbox{
+    margin-top: 20px;
+}
+
+.program-title {
+    font-size: 25px;
+    cursor: pointer;
+    font-family: Tahoma,fantasy;
+}
+.el-col{
+    
+}
+.program-list{
+    margin: 30px;
+}
+
+.aside{
+    min-height: 20px;
+}
+.programs{
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+.programs-body{
+    background-color: #f3f2f2;
+    border-radius: 10px;
+}
+.program-item{
+    padding-left: 15px;
+}
+.abstract {
+    cursor: pointer;
+    font-family: Georgia, Lato-Regular,Lato,sans-serif;
+    font-size: 15px;
+    line-height: 22px;
+    color: #262625;
+}
+
+.citation-count {
+    margin-top: 10px;
+    font-family: "Trebuchet MS", fantasy;
+    font-size: 15px;
+    font-weight: 400;
+    color: #73716f;
+    line-height: 22px;
+}
+
+.publish-year {
+    color:grey;
+    font-size: 14px;
+}
+
+.author-affiliation {
+    color:grey;
+    font-size: 14px;
+}
+
 .headerMessage{
     display: flex;
     padding: 10px;
