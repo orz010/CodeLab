@@ -126,8 +126,10 @@ export default {
     background-color: #ffffff;
 }
 .programs-body{
-    background-color: #f3f2f2;
-    border-radius: 10px;
+    background-color: white;
+    min-height: 200px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04);
 }
 .program-item{
     padding-left: 15px;
