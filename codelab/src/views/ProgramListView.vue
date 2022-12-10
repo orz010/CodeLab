@@ -83,10 +83,11 @@ export default {
     },
   methods: {
     gotoProgram(program_id) {
-      this.$router.push({
-        path: '/program',
-        query: { v: program_id }
-      });
+      let routeUrl = this.$router.resolve({
+            path: '/Detail',
+            query: { program: program_id }
+        });
+        window.open(routeUrl.href, "_blank");
     }
   },
 //   filters: {
@@ -123,7 +124,6 @@ export default {
 }
 .programs{
     min-height: 100vh;
-    background-color: #ffffff;
 }
 .programs-body{
     background-color: white;

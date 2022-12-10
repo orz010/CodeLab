@@ -40,10 +40,12 @@ export default {
         this.$store.commit('setSearchValue',this.searchValue);
         this.$store.commit('setSelectValue',this.selectValue);
         // console.log(this.$store.getters.getSearchValue)
-        this.$router.push({
+      
+        let routeUrl = this.$router.resolve({
           path: '/list',
           query: { search: this.searchValue }
         });
+        window.open(routeUrl.href, "_blank");
       },
       
     },
