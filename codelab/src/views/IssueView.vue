@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+import qs from "qs"
 export default {
     data(){
         return{
@@ -33,9 +34,25 @@ export default {
             ]
         }
     },
+    mounted:function(){
+        this.getIssue()
+    },
     methods:{
-        created(){
-
+        getIssue(){
+            let issue_id = this.$route.query.issueId
+            let program_id = this.$route.query.program
+            this.$axios({
+                url: '/getIssueById',
+                method: 'post',
+                data: qs.stringify({
+                    issue_id: issue_id,
+                    program_id: program_id
+                })
+            }).then(res=>{
+                console.log(res)
+                this.title=res.data.title
+                this.List=res.data.List
+            })
         },
     }
 }

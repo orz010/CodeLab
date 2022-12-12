@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+import qs from "qs"
 export default {
     data(){
         return{
@@ -31,14 +32,28 @@ export default {
             ]
         }
     },
+    mounted:function(){
+        this.getPrList()
+    },
     methods:{
-        created(){
-
+        getPrList(){
+            let program_id = this.$route.query.program
+            this.$axios({
+                url: '/getPrListById',
+                method: 'post',
+                data: qs.stringify({
+                    program_id: program_id
+                })
+            }).then(res=>{
+                console.log(res)
+                this.title=res.data.title
+                this.PrList=res.data.PrList
+            })
         },
         toPr(id){
             let routeUrl = this.$router.resolve({
                 path: '/Pr',
-                query: {PrId: id}
+                query: {PrId: id, program: this.$route.query.program}
             });
             window.open(routeUrl.href, "_blank");
         }

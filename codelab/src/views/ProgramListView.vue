@@ -36,6 +36,7 @@
 
 <script>
 import SearchBox from '../components/searchBox.vue'
+import qs from 'qs'
 export default {
     components: {
         SearchBox,
@@ -88,8 +89,28 @@ export default {
             query: { program: program_id }
         });
         window.open(routeUrl.href, "_blank");
-    }
+    },
+    getProgram(){
+        let name = this.$route.query.search
+
+        this.$axios({
+            url: '/getProgramByName',
+            method: 'post',
+            data: qs.stringify({
+                name: name
+            })
+        }).then(res=>{
+            console.log(res)
+            this.programs=res.data.programs
+        })
+    },
+    created(){
+        this.getProgram()
+    },
   },
+  mounted:function(){
+      this.getProgram();
+  }
 //   filters: {
 //     ellipsis: function(value) {
 //       if (!value) return "";

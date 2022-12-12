@@ -71,8 +71,9 @@
     
 </template>
 <script>
-
+import qs from "qs"
 export default {
+
     data(){
         return{
             info:{
@@ -155,9 +156,25 @@ export default {
             pr:['1'],
         }
     },
+    mounted:function(){
+        this.getDetail()
+    },
     methods:{
-        created(){
-
+        getDetail(){
+            let program_id = this.$route.query.program
+            this.$axios({
+                url: '/getDetailById',
+                method: 'post',
+                data: qs.stringify({
+                    program_id: program_id
+                })
+            }).then(res=>{
+                console.log(res)
+                this.info=res.data.info
+                this.contributerList=res.data.contributerList
+                this.issueList=res.data.issueList
+                this.prList=res.data.prList
+            })
         },
         toIssueList(){
             // let routeUrl = this.$router.resolve({
@@ -186,7 +203,7 @@ export default {
             // window.open(routeurl.herf, "_blank")
             let routeUrl = this.$router.resolve({
                 path: '/Issue',
-                query: {issueId: id}
+                query: {issueId: id, program: this.$route.query.program}
             });
             window.open(routeUrl.href, "_blank");
 
@@ -199,7 +216,7 @@ export default {
             // window.open(url.herf, "_blank")
             let routeUrl = this.$router.resolve({
                 path: '/Pr',
-                query: {prId: id}
+                query: {PrId: id, program: this.$route.query.program}
             });
             window.open(routeUrl.href, "_blank");
 
