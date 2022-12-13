@@ -1,7 +1,9 @@
 <template>
   <div class="programs">
       <div class="searchbox">
-            <SearchBox :options="option"/>
+            <SearchBox :options="option"
+            :name="this.$route.query.search"
+            :kind="this.$route.query.kind"/>
         </div>
       <el-row>
           <el-col :span="6">
@@ -68,6 +70,10 @@ export default {
                 value: '7',
                 label: 'rust'
                 },
+                {
+                    value: '8',
+                    label: "Shell"
+                }
             ],
 
         }
@@ -81,6 +87,7 @@ export default {
         window.open(routeUrl.href, "_blank");
     },
     getProgram(){
+        let loading = this.$loading({fullscreen: true, text: '拼命加载中...'})
         let name = this.$route.query.search
 
         this.$axios({
@@ -90,6 +97,7 @@ export default {
                 name: name
             })
         }).then(res=>{
+            loading.close()
             console.log(res)
             if(!res.data.info||res.data.info.length==0) this.programs=[]
             else this.programs=res.data.info

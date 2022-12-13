@@ -22,13 +22,11 @@
 <script>
 export default {
     name: "searchBox",
-    props: {
-      options: [],
-    },
+    props:['options','name','kind'],
     data(){
         return{
-            searchValue: this.$store.getters.getSearchValue,
-            selectValue: this.$store.getters.getSelectValue,
+            searchValue: this.name,
+            selectValue: this.kind,
         }
     },
     methods:{
@@ -36,23 +34,15 @@ export default {
         if (this.searchValue === '') {
             this.$message.warning("请输入检索词！");
             return;
-        }
-        this.$store.commit('setSearchValue',this.searchValue);
-        this.$store.commit('setSelectValue',this.selectValue);
-        // console.log(this.$store.getters.getSearchValue)
-      
+        }      
         let routeUrl = this.$router.resolve({
           path: '/list',
-          query: { search: this.searchValue }
+          query: { search: this.searchValue ,kind: this.selectValue}
         });
         window.open(routeUrl.href, "_blank");
       },
-      
     },
-    mutations:{
-      // getSearchValue(){
-      //   this.searchValue=this.$store.getters.getSearchValue;
-      // },
+    mounted:function(){
     }
 
 }
