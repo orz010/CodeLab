@@ -8,7 +8,7 @@
                 </div>
                 <div class="content">
                     <div v-for="(issue, index) in curIssueList" :key="index" class="content-block">
-                        <span @click="toIssue(issue.id)" class="content-text">#{{index+(pageIdx-1)*10+1}}：{{issue.title}}</span>
+                        <span @click="toIssue(issue.issue_id)" class="content-text">#{{index+(pageIdx-1)*10+1}}：{{issue.title}}</span>
                     </div>
                 </div>
                 <div style="text-align: center">
@@ -68,16 +68,18 @@ export default {
     },
     methods:{
         getIssueList(){
+            let loading = this.$loading({fullscreen: true, text: '拼命加载中...'})
             let program_id = this.$route.query.program
             this.$axios({
-                url: '/getIssueListById',
+                url: '/contents/getIssueListById',
                 method: 'post',
                 data: qs.stringify({
                     program_id: program_id
                 })
             }).then(res=>{
+                loading.close()
                 console.log(res)
-                this.title=res.data.title
+                this.issueNum=res.data.issueNum
                 this.issueList=res.data.issueList
                 this.handleCurrentChange(1)
             })

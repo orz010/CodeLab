@@ -8,18 +8,19 @@
               <div class="aside"></div>
           </el-col>
           <el-col :span="12" class="program-list">
-            <div class="programs-body" style="text-align: left">
+            <el-empty v-if="programs.length==0" description="没有搜索到结果，试试别的关键词吧"></el-empty>
+            <div class="programs-body" style="text-align: left" v-else>
                 <div v-for="(program, index) in this.programs" v-bind:key="index" class="program-item">
                     <div style="margin-bottom: 10px">
-                        <span class="program-title" @click="gotoProgram(program.program_id)">{{program.program_title}}</span>
+                        <span class="program-title" @click="gotoProgram(program.id)">{{program.repo_name}}</span>
                     </div>
-                    <!-- <div style="text-align:left;margin-top:10px;">
-                    <span class="abstract">{{program.abstract|ellipsis}}</span>
-                    </div> -->
 
                     <div class="citation-count">
-                    <span>{{ program.star_num }}&nbsp;star</span>
-                    <span>&nbsp;·&nbsp;{{ program.fork_num }}&nbsp;fork</span>
+                    <span>{{ program.stargazers_count }}&nbsp;star</span>
+                    <span>&nbsp;·&nbsp;{{ program.forks_count }}&nbsp;fork</span>
+                    </div>
+                    <div class="citation-count">
+                    <span>{{program.language}}</span>
                     </div>
 
                     <el-divider v-if="index<programs.length-1"></el-divider>
@@ -43,18 +44,7 @@ export default {
     },
     data(){
         return{
-            programs:[{'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4},
-            {'program_id':1,'program_title':'title','star_num':3,'fork_num':4}],
+            programs:[],
             option: [
                 {
                 value: '1',
@@ -94,14 +84,15 @@ export default {
         let name = this.$route.query.search
 
         this.$axios({
-            url: '/getProgramByName',
+            url: '/crawler/getProgramByName/',
             method: 'post',
             data: qs.stringify({
                 name: name
             })
         }).then(res=>{
             console.log(res)
-            this.programs=res.data.programs
+            if(!res.data.info||res.data.info.length==0) this.programs=[]
+            else this.programs=res.data.info
         })
     },
     created(){
@@ -148,7 +139,7 @@ export default {
 }
 .programs-body{
     background-color: white;
-    min-height: 200px;
+    min-height: 20px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04);
 }

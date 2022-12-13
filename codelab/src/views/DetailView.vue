@@ -3,23 +3,24 @@
         <el-row>
             <el-col :span="4" style="min-height:20px"></el-col>
             <el-col :span="16">
-                <div class="primary-information">
+                <div class="primary-inforrmation">
                     <div class="title">
-                        {{this.info.title}}
+                        {{this.infor.repo_name}}
                     </div>
                     <div class="contributer">
-                        <span v-for="(author, index) in this.contributerList" :key="index">
-                            {{author.name}}&nbsp;&nbsp;
-                        </span>
+                        <span class="_link" @click="toOwner(owner.contributer_name)" v-for="(owner, index) in contributerList" :key="index"><span v-if="index<=5">{{owner.contributer_name}}&nbsp;&nbsp;</span></span>
                     </div>
-                    <div class="information">
-                        star：{{this.info.star}}
+                    <div class="inforrmation">
+                        star：{{this.infor.stargazers_count}}
                     </div>
-                    <div class="information">
-                        fork：{{this.info.fork}}
+                    <div class="inforrmation">
+                        fork：{{this.infor.forks_count}}
                     </div>
-                    <div class="information">
-                        上次更新时间：{{this.info.time}}
+                    <div class="inforrmation">
+                        主要语言：{{this.infor.language}}
+                    </div>
+                    <div class="inforrmation">
+                        上次更新时间：{{this.infor.update_time | dateFormat}}
                     </div>
                 </div>
             </el-col>
@@ -28,38 +29,38 @@
         <el-row>
             <el-col :span="4" style="min-height:20px"></el-col>
             <el-col :span="16">
-                <div class="junior-information">
+                <div class="junior-inforrmation">
                     <div class="junior-block">
                         <el-collapse v-model="repo">
                             <el-collapse-item title="代码库下载" name="1">
-                                <div>ssh：{{this.info.ssh}}</div>
-                                <div>http：{{this.info.http}}</div>
+                                <div>ssh：<span>{{this.infor.ssh_url}}</span></div>
+                                <div>http：<span>{{this.infor.clone_url}}</span></div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
                     <div class="junior-block">
                         <el-collapse v-model="issue">
                             <el-collapse-item title="Issue" name="1">
-                                <div v-for="(issue, index) in issueList" :key="index">
-                                    <span @click="toIssue(issue.id)">{{issue.title}}</span>
+                                <div v-for="(issue, index) in issue_list" :key="index">
+                                    <span @click="toIssue(issue.issue_id)">#{{index+1}}：{{issue.title}}</span>
                                 </div>
-                                <div v-if="this.issueList.length>5">
-                                    <span @click="toIssueList()" class="_link">查看所有issue</span>
+                                <div v-if="this.issue_list.length>5">
+                                    <span @click="toissue_list()" class="_link">查看所有issue</span>
                                 </div>
-                                <div v-if="!this.issueList || this.issueList.length==0">暂无issue</div>
+                                <div v-if="!this.issue_list || this.issue_list.length==0">暂无issue</div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
                     <div class="junior-block">
                         <el-collapse v-model="pr">
                             <el-collapse-item title="Pull Request" name="1">
-                                <div v-for="(pr, index) in prList" :key="index">
-                                    <span @click="toPr(pr.id)">{{pr.title}}</span>
+                                <div v-for="(pr, index) in pr_list" :key="index">
+                                    <span @click="toPr(pr.pr_id)">#{{index+1}}：{{pr.title}}</span>
                                 </div>
-                                <div v-if="this.prList.length>5">
-                                    <span @click="toPrList()" class="_link">查看所有Pull Request</span>
+                                <div v-if="this.pr_list.length>5">
+                                    <span @click="topr_list()" class="_link">查看所有Pull Request</span>
                                 </div>
-                                <div v-if="!this.prList || this.prList.length==0">暂无Pull Request</div>
+                                <div v-if="!this.pr_list || this.pr_list.length==0">暂无Pull Request</div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
@@ -76,30 +77,32 @@ export default {
 
     data(){
         return{
-            info:{
+            infor:{
                 id:'',
                 title:'CodeLab',
                 star: 109,
                 fork: 279,
                 time: '2022-11-28',
                 ssh: 'ssh@orz010.github.com',
-                http: 'http@orz010.github.com'
+                http: 'http@orz010.github.com',
+                owner: '',
             },
             contributerList:[
                 {
                     AuthorUrl: 'www.baidu.com',
-                    name: 'Adams Smith'
+                    name: 'orz010'
                 },
                 {
                     AuthorUrl: 'www.baidu.com',
-                    name: 'Adams Smith'
+                    name: 'AdamsSmith'
                 },
                 {
                     AuthorUrl: 'www.baidu.com',
-                    name: 'Adams Smith'
+                    name: 'AdamsSmith'
                 }
             ],
-            issueList:[
+            
+            issue_list:[
                 {
                     title: 'issue1',
                     id: '1'
@@ -125,7 +128,7 @@ export default {
                     id: '1'
                 },
             ],
-            prList:[
+            pr_list:[
                 {
                     title: 'Pr1',
                     id: '1'
@@ -161,36 +164,38 @@ export default {
     },
     methods:{
         getDetail(){
+            let loading = this.$loading({fullscreen: true, text: '拼命加载中...'})
             let program_id = this.$route.query.program
             this.$axios({
-                url: '/getDetailById',
+                url: '/crawler/getDetailById/',
                 method: 'post',
                 data: qs.stringify({
                     program_id: program_id
                 })
             }).then(res=>{
+                loading.close()
                 console.log(res)
-                this.info=res.data.info
-                this.contributerList=res.data.contributerList
-                this.issueList=res.data.issueList
-                this.prList=res.data.prList
+                this.infor=res.data.info
+                this.contributerList=res.data.contributor_list
+                this.issue_list=res.data.issue_list
+                this.pr_list=res.data.pr_list
             })
         },
-        toIssueList(){
+        toissue_list(){
             // let routeUrl = this.$router.resolve({
-            //     path: '/IssueList',
+            //     path: '/issue_list',
             //     query: {program: this.$route.query.program}
             // })
             // window.open(routeUrl.herf, "_blank")
             let routeUrl = this.$router.resolve({
-                path: '/IssueList',
+                path: '/Issuelist',
                 query: {program: this.$route.query.program}
             });
             window.open(routeUrl.href, "_blank");
         },
-        toPrList(){
+        topr_list(){
             let routeUrl = this.$router.resolve({
-                path: '/PrList',
+                path: '/Prlist',
                 query: {program: this.$route.query.program}
             });
             window.open(routeUrl.href, "_blank");
@@ -220,6 +225,9 @@ export default {
             });
             window.open(routeUrl.href, "_blank");
 
+        },
+        toOwner(name){
+            window.open('https://github.com/'+name, "_blank");
         }
     },
 }
@@ -243,7 +251,7 @@ export default {
     margin-top: 10px;
     font-size: 18px;
 }
-.DetailView .information{
+.DetailView .inforrmation{
     padding-left: 20px;
     font-size: 15px;
     color: #909eb4;

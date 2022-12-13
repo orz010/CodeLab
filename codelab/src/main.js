@@ -22,3 +22,15 @@ Vue.qs = qs
 // read data from public/global.json and mount it globally
 
 axios.defaults.baseURL = "api";
+
+Vue.filter('dateFormat', function (originVal) {
+  const dt = new Date(originVal)
+  const y = dt.getFullYear()
+  // 月份从0开始,使她变成字符串,不足两位时,前面补个0.
+  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+  const d = (dt.getDate() + '').padStart(2, '0')
+  const hh = (dt.getHours() + '').padStart(2, '0')
+  const mm = (dt.getMinutes() + '').padStart(2, '0')
+  const ss = (dt.getSeconds() + '').padStart(2, '0')
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+})

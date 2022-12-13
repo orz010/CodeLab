@@ -43,6 +43,10 @@ export default {
                 value: '7',
                 label: 'rust'
                 },
+                {
+                    value: '8',
+                    label: "Shell"
+                }
             ]
         }
         

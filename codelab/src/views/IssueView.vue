@@ -6,10 +6,15 @@
                 <div class="Title">
                     {{this.title}}
                 </div>
+                <div class="sub-info">
+                    <span class="sub-author">{{this.author}}&nbsp;&nbsp;&nbsp;<span class="sub-date">{{this.time | dateFormat}}</span></span>
+                </div>
+                <div class='sub-info' v-if="content.length!=0"><span class="content">{{this.content}}</span></div>
+                <el-empty description="暂无内容" v-else></el-empty>
                 <div class="content">
                     <div v-for="(comment, index) in List" :key="index" class="content-block">
                         <div class="author"><span>{{comment.author}}</span>&nbsp;
-                        <span class="time">{{comment.time}}</span></div>
+                        <span class="time">{{comment.time | dateFormat}}</span></div>
                         <div class="content-text">{{comment.content}}</div>
                     </div>
                 </div>
@@ -24,6 +29,9 @@ export default {
     data(){
         return{
             title: 'issue1',
+            author: '',
+            time: '',
+            content: '',
             List:[
                 {author:'Adams Smith', content:'I find a issue', time:'2022-11-28'},
                 {author:'Adams Smith', content:'I find a issue', time:'2022-11-28'},
@@ -39,19 +47,24 @@ export default {
     },
     methods:{
         getIssue(){
+            let loading = this.$loading({fullscreen: true, text: '拼命加载中...'})
             let issue_id = this.$route.query.issueId
             let program_id = this.$route.query.program
             this.$axios({
-                url: '/getIssueById',
+                url: '/contents/getIssueById',
                 method: 'post',
                 data: qs.stringify({
                     issue_id: issue_id,
                     program_id: program_id
                 })
             }).then(res=>{
+                loading.close()
                 console.log(res)
                 this.title=res.data.title
-                this.List=res.data.List
+                this.author=res.data.author
+                this.content=res.data.content
+                this.time=res.data.time
+                this.List=res.data.comments
             })
         },
     }
@@ -82,7 +95,7 @@ export default {
     font-size: 20px;
 }
 .IssueView .content-text{
-    font-family: Georgia, fantasy;
+    font-family: Tahoma,fantasy;
     padding-left: 20px;
     padding-bottom: 10px;
 }
@@ -92,5 +105,20 @@ export default {
 .IssueView .time{
     font-size: 15px;
     color: #909eb4;
+}
+.sub-info{
+    margin-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+.sub-author{
+    font-size: 17px;
+}
+.sub-date{
+    font-size: 15px;
+    color: #909eb4; 
+}
+.sub-content{
+    font-size: 17px;
 }
 </style>

@@ -1,15 +1,20 @@
 <template>
-    <div class="PrView">
+    <div class="prView">
         <el-row>
             <el-col :span="4" style="min-height:20px"></el-col>
             <el-col :span="16">
                 <div class="Title">
                     {{this.title}}
                 </div>
+                <div class="sub-info">
+                    <span class="sub-author">{{this.author}}&nbsp;&nbsp;&nbsp;<span class="sub-date">{{this.time | dateFormat}}</span></span>
+                </div>
+                <div class='sub-info' v-if="content.length!=0"><span class="sub-content">{{this.content}}</span></div>
+                <el-empty description="暂无内容" v-else></el-empty>
                 <div class="content">
                     <div v-for="(comment, index) in List" :key="index" class="content-block">
                         <div class="author"><span>{{comment.author}}</span>&nbsp;
-                        <span class="time">{{comment.time}}</span></div>
+                        <span class="time">{{comment.time | dateFormat}}</span></div>
                         <div class="content-text">{{comment.content}}</div>
                     </div>
                 </div>
@@ -23,45 +28,53 @@ import qs from "qs"
 export default {
     data(){
         return{
-            title: 'Pr1',
+            title: 'pr1',
+            author: '',
+            time: '',
+            content: '',
             List:[
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
-                {author:'Adams Smith', content:'I find a Pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
+                {author:'Adams Smith', content:'I find a pr', time:'2022-11-28'},
             ]
         }
     },
     mounted:function(){
-        this.getPr()
+        this.getpr()
     },
     methods:{
-        getPr(){
-            let Pr_id = this.$route.query.PrId
+        getpr(){
+            let loading = this.$loading({fullscreen: true, text: '拼命加载中...'})
+            let pr_id = this.$route.query.prId
             let program_id = this.$route.query.program
             this.$axios({
-                url: '/getPrById',
+                url: '/contents/getPrById',
                 method: 'post',
                 data: qs.stringify({
-                    Pr_id: Pr_id,
+                    pr_id: pr_id,
                     program_id: program_id
                 })
             }).then(res=>{
+                loading.close()
                 console.log(res)
                 this.title=res.data.title
-                this.List=res.data.List
+                this.author=res.data.author
+                this.content=res.data.content
+                this.time=res.data.time
+                this.List=res.data.comments
             })
         },
     }
 }
 </script>
 <style>
-.PrView{
+.prView{
     text-align: left;
 }
-.PrView .Title{
+.prView .Title{
     font-family: Tahoma,fantasy;
     text-align: left;
     padding-top: 50px;
@@ -71,7 +84,7 @@ export default {
     /* line-height: 40px; */
     color: #353535;
 }
-.PrView .content-block{
+.prView .content-block{
     min-height: 40px;
     background-color: white;
     margin-left: 10px;
@@ -81,16 +94,31 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 0 6px rgba(0, 0, 0, .04);
     font-size: 20px;
 }
-.PrView .content-text{
-    font-family: Georgia, fantasy;
+.prView .content-text{
+    font-family: Tahoma,fantasy;
     padding-left: 20px;
     padding-bottom: 10px;
 }
-.PrView .author{
+.prView .author{
     padding: 20px;
 }
-.PrView .time{
+.prView .time{
     font-size: 15px;
     color: #909eb4;
+}
+.sub-info{
+    margin-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+.sub-author{
+    font-size: 17px;
+}
+.sub-date{
+    font-size: 15px;
+    color: #909eb4; 
+}
+.sub-content{
+    font-size: 17px;
 }
 </style>
